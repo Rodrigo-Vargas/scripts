@@ -1,47 +1,56 @@
 #!/bin/bash
 
-install_basics=false
+install_basics=true
 install_vb_additions=false
-install_vs_code=false
-
-install_everythingelse=false
-
+install_vs_code=true
+install_software_dependencies=true
+install_everythingelse=true
+sleep_time=5
 
 #sudo apt  update
 #sudo apt dist-upgrade
 
-if[ "$install_basics" = true ]
-   sudo apt install xorg gdm3 gnome-session # Basics for use interface
+if [ "$install_basics" == true ]
+then
+   echo "**********************************************"
+   echo "**************** BASICS **********************"
+   echo "**********************************************"
+
+   sleep $sleep_time
+
+   sudo apt install xorg gdm3 gnome-session gnome-terminal -y # Basics for use interface
 fi
 
 #Virtual Box Additions
-if [ $install_vb_additions ]
+if [ "$install_vb_additions" == true ]
 then
-   sudo apt install build-essential dkms linux-headers-$(uname -r)
-   mkdir -p /mnt/cdrom
-   mount /dev/cddrom /mnt/cdrom
+   sudo apt install build-essential dkms linux-headers-$(uname -r) -y
+   sudo mkdir -p /mnt/cdrom
+   sudo mount /dev/cdrom /mnt/cdrom
 
    cd /mnt/cdrom/
-   sh ./VBoxLinuxAdditions.run --nox11
+   sudo sh ./VBoxLinuxAdditions.run --nox11
 fi
 
-if [ $install_software_dependencies ]
-   sudo apt install curl autoconf bison libxml2-dev
+if [ "$install_software_dependencies" == true ]
+then
+   #sudo apt install curl autoconf bison libxml2-dev
 
-   sudo apt-get update && sudo apt-get install autoconf bison build-essential curl gettext libcurl4-openssl-dev libedit-dev libicu-dev libjpeg-dev libmysqlclient-dev libonig-dev libpng-dev libpq-dev libreadline-dev libsqlite3-dev libssl-dev libxml2-dev libzip-dev openssl pkg-config re2c zlib1g-dev
+   sudo apt install autoconf bison build-essential curl gettext libcurl4-openssl-dev libedit-dev libicu-dev libjpeg-dev libmysqlclient-dev libonig-dev libpng-dev libpq-dev libreadline-dev libsqlite3-dev libssl-dev libxml2-dev libzip-dev openssl pkg-config re2c zlib1g-dev -y
 fi
 
 # Install VS Code
-if [ $install_vs_code ]
+if [ "$install_vs_code" == true ]
 then
    curl https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor > packages.microsoft.gpg
    sudo install -o root -g root -m 644 packages.microsoft.gpg /usr/share/keyrings/
    sudo sh -c 'echo "deb [arch=amd64 signed-by=/usr/share/keyrings/packages.microsoft.gpg] https://packages.microsoft.com/repos/vscode stable main" > /etc/apt/sources.list.d/vscode.list'
-   sudo apt updade
-   sudo apt install code
+   sudo apt update
+   sudo apt install code -y
 fi
 
-if [ $install_google_chrome ]
+if [ "$install_google_chrome" == true ]
+then
    # Install Google Chrome
    wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
    sudo dpkg -i google-chrome-stable_current_amd64.deb
@@ -49,7 +58,7 @@ if [ $install_google_chrome ]
 fi
 
 
-if [ $install_everythingelse ]
+if [ "$install_everythingelse" = true ]
 then
    # Install Git
    sudo apt install git
