@@ -6,8 +6,11 @@ install_git=false
 install_vs_code=false
 install_software_dependencies=false
 install_themes=false
-install_asdf=true
-install_ruby=true
+install_asdf=false
+install_ruby=false
+install_nodejs=true
+install_php=true
+install_mysql=true
 install_everythingelse=false
 sleep_time=5
 
@@ -107,7 +110,10 @@ fi
 
 if [ "$install_ruby" == true ]
 then
-   # Install Ruby
+   echo "**********************************************"
+   echo "************  Install Ruby *******************"
+   echo "**********************************************"
+
    asdf plugin-add ruby https://github.com/asdf-vm/asdf-ruby.git
    asdf install ruby 2.6.3
    asdf global ruby  2.6.3
@@ -115,20 +121,51 @@ then
    gem install jekyll
 fi
 
-if [ "$install_everythingelse" == true ]
+if [ "$install_nodejs" == true ]
 then
+   echo "**********************************************"
+   echo "***********  Install Node.js *****************"
+   echo "**********************************************"
+
    asdf plugin-add nodejs https://github.com/asdf-vm/asdf-nodejs.git
 
    bash ~/.asdf/plugins/nodejs/bin/import-release-team-keyring
 
    asdf install nodejs 12.16.2
    asdf global nodejs 12.16.2
+fi
 
-   # Install PHP
+if [ "$install_php" == true ]
+then
+   echo "**********************************************"
+   echo **"***********  Install PHP *******************"
+   echo "**********************************************"
+
+
+   # Become IPv4 a priority over IPv6
+   sudo sh -c "echo 'precedence ::ffff:0:0/96 100' >> /etc/gai.conf"
+
    asdf plugin-add php https://github.com/asdf-community/asdf-php.git
-
    asdf install php 7.2.30
+   asdf global php 7.2.30
+fi
 
+if [ "$install_conky" == true ]
+then
+   sudo apt install conky
+fi
+
+if [ "$install_mysql" == true ]
+then
+   sudo apt-get install mysql-server
+   sudo mysql_secure_installation utility
+   sudo mysql -u root -p root -e "ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY 'root';"
+fi
+
+if [ "$install_everythingelse" == true ]
+then
    # Install TMUX
    sudo apt install tmux
+
+   sudo apt install gnome-shell-extension-ubuntu-dock
 fi
