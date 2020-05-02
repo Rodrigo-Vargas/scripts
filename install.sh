@@ -8,11 +8,12 @@ install_vs_code=false
 install_software_dependencies=false
 install_themes=false
 install_asdf=false
-install_ruby=true
-install_nodejs=true
-install_php=true
-install_mysql=true
-install_everythingelse=true
+install_ruby=false
+install_nodejs=false
+install_php=false
+install_mysql=false
+install_docker=true
+install_everythingelse=false
 sleep_time=5
 
 #sudo apt  update
@@ -169,6 +170,30 @@ then
    sudo mysql -u root -p root -e "ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY 'root';"
 fi
 
+if [ "$install_docker" == true ]
+then
+   echo "**********************************************"
+   echo "***********  Install Docker ******************"
+   echo "**********************************************"
+
+   sudo apt install apt-transport-https ca-certificates curl gnupg-agent software-properties-common -y
+
+   curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+
+   sudo add-apt-repository \
+   "deb [arch=amd64] https://download.docker.com/linux/ubuntu \
+   $(lsb_release -cs) \
+   stable"
+
+   sudo apt update
+
+   sudo apt install docker-ce -y
+
+   # Add current user to docker group
+   sudo usermod -aG docker $USER
+
+fi
+
 if [ "$install_everythingelse" == true ]
 then
    # Install TMUX
@@ -176,3 +201,5 @@ then
 
    sudo apt install gnome-shell-extension-ubuntu-dock
 fi
+
+
