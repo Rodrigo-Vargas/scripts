@@ -3,15 +3,16 @@
 install_basics=false
 install_vb_additions=false
 install_git=false
+install_google_chrome=false
 install_vs_code=false
 install_software_dependencies=false
 install_themes=false
 install_asdf=false
-install_ruby=false
+install_ruby=true
 install_nodejs=true
 install_php=true
 install_mysql=true
-install_everythingelse=false
+install_everythingelse=true
 sleep_time=5
 
 #sudo apt  update
@@ -79,6 +80,9 @@ fi
 if [ "$install_google_chrome" == true ]
 then
    # Install Google Chrome
+   sudo apt install fonts-liberation xdg-utils -y
+
+
    wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
    sudo dpkg -i google-chrome-stable_current_amd64.deb
    rm google-chrome-stable_current_amd64.deb
@@ -133,6 +137,9 @@ then
 
    asdf install nodejs 12.16.2
    asdf global nodejs 12.16.2
+
+   # Set max file watchers
+   echo fs.inotify.max_user_watches=524288 | sudo tee -a /etc/sysctl.conf && sudo sysctl -p
 fi
 
 if [ "$install_php" == true ]
